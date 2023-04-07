@@ -9,15 +9,17 @@ const connectSubstrate = async () => {
     console.log('Connection to Substrate is OK.')
     return api;
 }
-
-const main = async () => {
-    const api = await connectSubstrate();
-    api.query.system.events((events: any) => {
+const subscribeEvents = async (api: ApiPromise) => {
+    await api.query.system.events((events: any) => {
         console.log(`@ [ ${events.length} ] events received`)
         events.forEach((event: any, index: number) => {
             console.log(`-->[ ${index} ]: ${event}`)
         })
     });
+}
+const main = async () => {
+    const api = await connectSubstrate();
+    await subscribeEvents(api);
 }
 main()
     // .then(() => {
